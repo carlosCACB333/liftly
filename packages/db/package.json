@@ -1,0 +1,26 @@
+{
+  "name": "@workspace/db",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/auth/auth-client.ts"
+  },
+  "scripts": {
+    "db:emit": "prisma contract emit",
+    "db:init": "prisma db init",
+    "db:update": "prisma db update",
+    "db:plan": "prisma migration plan",
+    "db:migrate": "prisma db migrate",
+    "auth:generate": "bunx @better-auth/cli generate --config ./auth.cli.ts"
+  },
+  "dependencies": {
+    "@better-auth/core": "^1.7.7",
+    "better-auth": "^1.7.7",
+    "better-auth-adapter-prisma8": "^0.6.0"
+  },
+  "devDependencies": {
+    "@better-auth/cli": "^1.4.21"
+  }
+}

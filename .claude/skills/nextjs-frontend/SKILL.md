@@ -10,6 +10,11 @@ de la aplicación web.
 
 ## Arquitectura
 
+- Instala los componentes de shadcn/ui en `packages/ui` si aun no están presentes.
+- Usa React hook form para formularios.
+- Usa zod para validación de formularios y `zodResolver` para integrarlo con React hook form.
+- Para estado global, usa React Context o Zustand.
+- Usa Tanstack Query para gestionar el estado de las consultas a la API si lo necesitas.
 - Prefiere Server Components; añade `"use client"` solo cuando se necesite
   estado, eventos, APIs del navegador o una librería interactiva.
 - Mantén las páginas del App Router orientadas a composición y extrae UI

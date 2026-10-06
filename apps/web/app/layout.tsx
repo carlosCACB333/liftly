@@ -1,5 +1,5 @@
+import type { Metadata } from "next"
 import { Geist, Geist_Mono, Roboto } from "next/font/google"
-
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@workspace/ui/lib/utils";
@@ -11,6 +11,14 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
+export const metadata: Metadata = {
+  title: {
+    default: "Liftly",
+    template: "%s · Liftly",
+  },
+  description: "Plataforma de fitness para crear y seguir tus rutinas.",
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -18,7 +26,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="es"
       suppressHydrationWarning
       className={cn("antialiased", fontMono.variable, "font-sans", roboto.variable)}
     >
