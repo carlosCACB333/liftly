@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, test } from "vitest"
 import { PLAN_LIMITS } from "@/lib/domain/plan"
 import { workoutSchema, type WorkoutInput } from "./workout"
 

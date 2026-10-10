@@ -1,4 +1,4 @@
-import { describe, expect, test } from "bun:test"
+import { describe, expect, test } from "vitest"
 import { logSetSchema, type LogSetInput } from "./run"
 
 function input(overrides: Partial<LogSetInput> = {}): LogSetInput {

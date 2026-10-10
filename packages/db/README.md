@@ -1,15 +1,18 @@
-# db
+# @workspace/db
 
-To install dependencies:
+Acceso a datos (Prisma 8 + PostgreSQL) y configuración de Better Auth.
+
+Las dependencias se instalan desde la raíz del monorepo con Bun (gestor de
+paquetes):
 
 ```bash
 bun install
 ```
 
-To run:
+Los scripts (`db:emit`, `db:migrate`, `db:seed`, `auth:generate`, …) se
+ejecutan en Node y cargan las variables de entorno desde `apps/web/.env`.
+Ejecútalos desde este paquete o filtrando con Turborepo:
 
 ```bash
-bun run index.ts
+bun run --filter @workspace/db db:migrate
 ```
-
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.

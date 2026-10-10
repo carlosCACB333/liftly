@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test } from "bun:test"
+import { beforeEach, describe, expect, test } from "vitest"
 import { DEFAULT_COUNTDOWN_SEC, useTimerStore } from "./timer-store"
 
 function snapshot() {
