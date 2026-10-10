@@ -1,10 +1,12 @@
 import type { Metadata } from "next"
-import { Geist, Geist_Mono, Roboto } from "next/font/google"
+import { Geist_Mono, Roboto } from "next/font/google"
 import "@workspace/ui/globals.css"
+import { Toaster } from "@workspace/ui/components/sonner"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@workspace/ui/lib/utils";
+import { TimerTool } from "@/components/timer-tool"
+import { cn } from "@workspace/ui/lib/utils"
 
-const roboto = Roboto({subsets:['latin'],variable:'--font-sans'})
+const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" })
 
 const fontMono = Geist_Mono({
   subsets: ["latin"],
@@ -16,7 +18,8 @@ export const metadata: Metadata = {
     default: "Liftly",
     template: "%s · Liftly",
   },
-  description: "Plataforma de fitness para crear y seguir tus rutinas.",
+  description:
+    "Crea planes de entrenamiento con sesiones y ejercicios, compártelos con la comunidad o copia los de otros.",
 }
 
 export default function RootLayout({
@@ -31,7 +34,11 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", roboto.variable)}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster position="top-center" richColors closeButton />
+          <TimerTool />
+        </ThemeProvider>
       </body>
     </html>
   )

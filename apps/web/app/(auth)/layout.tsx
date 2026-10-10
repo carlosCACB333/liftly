@@ -26,7 +26,7 @@ export default function AuthLayout({
       </main>
 
       <footer className="relative px-6 pb-8 text-center text-xs text-muted-foreground">
-        Entrena con un plan, registra cada serie y progresa semana a semana.
+        Tus planes son privados salvo que decidas publicarlos.
       </footer>
     </div>
   )

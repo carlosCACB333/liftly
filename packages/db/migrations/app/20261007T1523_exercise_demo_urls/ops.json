@@ -1,0 +1,128 @@
+[
+  {
+    "id": "dropColumn.plan_exercise.demoUrl",
+    "label": "Drop column \"demoUrl\" from \"plan_exercise\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "demoUrl",
+        "table": "plan_exercise"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"demoUrl\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrl"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"demoUrl\"",
+        "sql": "ALTER TABLE \"public\".\"plan_exercise\" DROP COLUMN \"demoUrl\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"demoUrl\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrl"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.plan_exercise.demoUrls",
+    "label": "Add column \"demoUrls\" to \"plan_exercise\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "demoUrls",
+        "table": "plan_exercise"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"demoUrls\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrls"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"demoUrls\"",
+        "sql": "ALTER TABLE \"public\".\"plan_exercise\" ADD COLUMN \"demoUrls\" text[] DEFAULT '{}' NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"demoUrls\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrls"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.plan_exercise.plan_exercise_demoUrls_elem_not_null_86d48260",
+    "label": "Add check constraint \"plan_exercise_demoUrls_elem_not_null_86d48260\" on \"plan_exercise\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "plan_exercise_demoUrls_elem_not_null_86d48260",
+        "table": "plan_exercise"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"plan_exercise_demoUrls_elem_not_null_86d48260\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "plan_exercise_demoUrls_elem_not_null_86d48260",
+          "public",
+          "\"public\".\"plan_exercise\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"plan_exercise_demoUrls_elem_not_null_86d48260\"",
+        "sql": "ALTER TABLE \"public\".\"plan_exercise\" ADD CONSTRAINT \"plan_exercise_demoUrls_elem_not_null_86d48260\" CHECK (array_position(\"demoUrls\", NULL) IS NULL)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"plan_exercise_demoUrls_elem_not_null_86d48260\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "plan_exercise_demoUrls_elem_not_null_86d48260",
+          "public",
+          "\"public\".\"plan_exercise\""
+        ]
+      }
+    ]
+  }
+]

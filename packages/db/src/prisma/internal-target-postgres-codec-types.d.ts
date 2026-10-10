@@ -1,0 +1,17 @@
+export type {
+  Bit,
+  Char,
+  CodecTypes,
+  Interval,
+  JsonValue,
+  Numeric,
+  Time,
+  TimeString,
+  Timestamp,
+  TimestampString,
+  Timestamptz,
+  TimestamptzString,
+  Timetz,
+  VarBit,
+  Varchar,
+} from "@prisma/orm-target-postgres/target/codec-types"

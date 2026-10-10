@@ -13,6 +13,9 @@ model User {
   
   sessions      Session[]
   accounts      Account[]
+  trainingPlans TrainingPlan[]
+  planLikes     PlanLike[]
+  workoutSessions WorkoutSession[]
 
   @@map("user")
 }
@@ -67,4 +70,133 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model TrainingPlan {
+  id String @id
+  userId String
+  name String
+  description String?
+  visibility String @default("private")
+  status String @default("draft")
+  likeCount Int @default(0)
+  copiedFromPlanId String?
+  copiedFromName String?
+  copiedFromAuthorName String?
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  copiedFromPlan TrainingPlan? @relation("PlanCopies", fields: [copiedFromPlanId], references: [id], onDelete: SetNull)
+  copies TrainingPlan[] @relation("PlanCopies")
+  sessions PlanSession[]
+  likes PlanLike[]
+  workoutSessions WorkoutSession[]
+
+  @@index([userId])
+  @@index([visibility])
+  @@map("training_plan")
+}
+
+model PlanSession {
+  id String @id
+  planId String
+  name String
+  position Int
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  plan TrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  exercises PlanExercise[]
+
+  @@unique([planId, position])
+  @@index([planId])
+  @@map("plan_session")
+}
+
+model PlanExercise {
+  id String @id
+  sessionId String
+  name String
+  muscleGroup String
+  position Int
+  sets Int
+  repsMin Int?
+  repsMax Int?
+  durationMin Int?
+  weightValue Float?
+  weightUnit String?
+  restMin Int @default(4)
+  notes String?
+  demoUrls String[] @default([])
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  session PlanSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, position])
+  @@index([sessionId])
+  @@index([muscleGroup])
+  @@map("plan_exercise")
+}
+
+model PlanLike {
+  id String @id
+  planId String
+  userId String
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  plan TrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([planId, userId])
+  @@index([userId])
+  @@map("plan_like")
+}
+
+model WorkoutSession {
+  id String @id
+  userId String
+  planId String
+  planSessionId String
+  planNameSnapshot String
+  planAuthorNameSnapshot String
+  sessionNameSnapshot String
+  startedAt TimestamptzString @default(now())
+  completedAt TimestamptzString?
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan TrainingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planSession PlanSession @relation(fields: [planSessionId], references: [id], onDelete: Cascade)
+  sets WorkoutSet[]
+
+  @@index([userId])
+  @@index([userId, planId])
+  @@index([planSessionId])
+  @@map("workout_session")
+}
+
+model WorkoutSet {
+  id String @id
+  workoutSessionId String
+  exercisePosition Int
+  setNumber Int
+  exerciseNameSnapshot String
+  muscleGroupSnapshot String
+  reps Int?
+  durationSec Int?
+  weightValue Float?
+  weightUnit String?
+  skipped Boolean @default(false)
+  createdAt TimestamptzString @default(now())
+  updatedAt temporal.updatedAtString()
+
+  workoutSession WorkoutSession @relation(fields: [workoutSessionId], references: [id], onDelete: Cascade)
+
+  @@unique([workoutSessionId, exercisePosition, setNumber])
+  @@index([workoutSessionId])
+  @@map("workout_set")
 }

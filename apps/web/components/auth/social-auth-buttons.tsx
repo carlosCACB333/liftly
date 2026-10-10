@@ -1,13 +1,10 @@
 "use client"
 
-import * as React from "react"
-import { useRouter } from "next/navigation"
-
 import { authClient } from "@workspace/db/client"
 import { Button } from "@workspace/ui/components/button"
 import { Spinner } from "@workspace/ui/components/spinner"
-
 import { socialAuthErrorMessage } from "@/lib/auth/errors"
+import { useState } from "react"
 
 const PROVIDERS = [
   { id: "google", label: "Google" },
@@ -25,33 +22,26 @@ export function SocialAuthButtons({
   disabled = false,
   onError,
 }: SocialAuthButtonsProps) {
-  const router = useRouter()
-  const [pendingProvider, setPendingProvider] = React.useState<Provider | null>(null)
+  const [pendingProvider, setPendingProvider] = useState<Provider | null>(null)
 
-  const handleProvider = React.useCallback(
-    async (provider: Provider) => {
-      if (pendingProvider) {
-        return
-      }
+  const handleProvider = async (provider: Provider) => {
+    if (pendingProvider) {
+      return
+    }
 
-      setPendingProvider(provider)
+    setPendingProvider(provider)
 
-      const { error } = await authClient.signIn.social({
-        provider,
-        callbackURL: "/",
-      })
+    const { error } = await authClient.signIn.social({
+      provider,
+    })
 
-      if (error) {
-        setPendingProvider(null)
-        onError?.(socialAuthErrorMessage(error))
-        return
-      }
+    if (error) {
+      setPendingProvider(null)
+      onError?.(socialAuthErrorMessage(error))
+      return
+    }
 
-      router.push("/")
-      router.refresh()
-    },
-    [pendingProvider, onError, router]
-  )
+  }
 
   return (
     <div className="grid grid-cols-2 gap-3">

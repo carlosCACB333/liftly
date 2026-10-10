@@ -1,0 +1,297 @@
+[
+  {
+    "id": "data_migration.delete_orphan_workout_sessions",
+    "label": "Delete workout sessions with a missing plan or plan session",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"workout_session\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "delete workout sessions whose plan or plan session was removed",
+        "sql": "DELETE FROM \"public\".\"workout_session\" WHERE \"planId\" IS NULL OR \"planSessionId\" IS NULL",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify no orphan workout sessions remain",
+        "sql": "SELECT NOT EXISTS (SELECT 1 FROM \"public\".\"workout_session\" WHERE \"planId\" IS NULL OR \"planSessionId\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.workout_session.workout_session_planId_fkey",
+    "label": "Drop constraint \"workout_session_planId_fkey\" on \"workout_session\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "workout_session_planId_fkey",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"workout_session_planId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"workout_session_planId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\" DROP CONSTRAINT \"workout_session_planId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"workout_session_planId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.workout_session.planId",
+    "label": "Set NOT NULL on \"workout_session\".\"planId\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "planId",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"planId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "workout_session",
+          "planId"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"planId\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"workout_session\" WHERE \"planId\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"planId\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\" ALTER COLUMN \"planId\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"planId\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "workout_session",
+          "planId",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.workout_session.workout_session_planSessionId_fkey",
+    "label": "Drop constraint \"workout_session_planSessionId_fkey\" on \"workout_session\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "workout_session_planSessionId_fkey",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"workout_session_planSessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planSessionId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"workout_session_planSessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\" DROP CONSTRAINT \"workout_session_planSessionId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"workout_session_planSessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planSessionId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.workout_session.planSessionId",
+    "label": "Set NOT NULL on \"workout_session\".\"planSessionId\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "planSessionId",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"planSessionId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "workout_session",
+          "planSessionId"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"planSessionId\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"workout_session\" WHERE \"planSessionId\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"planSessionId\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\" ALTER COLUMN \"planSessionId\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"planSessionId\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "workout_session",
+          "planSessionId",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.workout_session.workout_session_planId_fkey",
+    "label": "Add foreign key \"workout_session_planId_fkey\" on \"workout_session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "workout_session_planId_fkey",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"workout_session_planId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"workout_session_planId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\"\nADD CONSTRAINT \"workout_session_planId_fkey\"\nFOREIGN KEY (\"planId\")\nREFERENCES \"public\".\"training_plan\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"workout_session_planId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.workout_session.workout_session_planSessionId_fkey",
+    "label": "Add foreign key \"workout_session_planSessionId_fkey\" on \"workout_session\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "workout_session_planSessionId_fkey",
+        "table": "workout_session"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"workout_session_planSessionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planSessionId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"workout_session_planSessionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"workout_session\"\nADD CONSTRAINT \"workout_session_planSessionId_fkey\"\nFOREIGN KEY (\"planSessionId\")\nREFERENCES \"public\".\"plan_session\" (\"id\")\nON DELETE CASCADE"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"workout_session_planSessionId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "workout_session_planSessionId_fkey",
+          "public",
+          "\"public\".\"workout_session\""
+        ]
+      }
+    ]
+  }
+]

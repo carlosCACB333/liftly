@@ -3,7 +3,10 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./*"],
-      "@workspace/ui/*": ["../../packages/ui/src/*"]
+      "@workspace/ui/*": ["../../packages/ui/src/*"],
+      "@internal/contract/types": ["../../packages/db/src/prisma/internal-contract-types.d.ts"],
+      "@internal/sql-contract/types": ["../../packages/db/src/prisma/internal-sql-contract-types.d.ts"],
+      "@internal/target-postgres/*": ["../../packages/db/src/prisma/internal-target-postgres-*"]
     },
     "plugins": [
       {

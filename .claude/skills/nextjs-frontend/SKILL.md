@@ -24,6 +24,11 @@ de la aplicación web.
   desde los aliases existentes; no copies implementaciones entre paquetes.
 - Evita obtener datos de la base de datos desde un Client Component. Usa
   Server Components para lecturas y Server Actions para mutaciones.
+- El temporizador global (`components/timer-tool.tsx` + `lib/timer-store.ts`,
+  Zustand) está montado en el layout raíz y se abre desde la barra de
+  navegación. Reutilízalo para cuentas atrás (p. ej. descansos) y cronómetros
+  en vez de duplicar lógica de timing; el runner lo abre con
+  `openForRest(segundos, etiqueta)`.
 
 ## Diseño
 

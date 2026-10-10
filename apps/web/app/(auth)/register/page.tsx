@@ -15,10 +15,10 @@ import { buttonVariants } from "@workspace/ui/components/button"
 
 export const metadata: Metadata = {
   title: "Crear cuenta",
-  description: "Crea tu cuenta de Liftly y empieza a diseñar tus rutinas.",
+  description: "Crea tu cuenta de Liftly y diseña tu primer plan de entrenamiento.",
 }
 
-export default async function RegistroPage() {
+export default async function RegisterPage() {
   const session = await getSession()
 
   if (session) {
@@ -31,7 +31,7 @@ export default async function RegistroPage() {
         <CardHeader className="gap-2 text-center">
           <CardTitle className="text-xl">Crea tu cuenta</CardTitle>
           <CardDescription>
-            Empieza a diseñar tus rutinas y a registrar cada entrenamiento.
+            Crea tu cuenta y diseña tu primer plan con sesiones y ejercicios.
           </CardDescription>
         </CardHeader>
         <CardContent>

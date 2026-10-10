@@ -5,22 +5,26 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./ids": "./src/ids.ts",
     "./client": "./src/auth/auth-client.ts"
   },
   "scripts": {
-    "db:emit": "prisma contract emit",
-    "db:init": "prisma db init",
-    "db:update": "prisma db update",
-    "db:plan": "prisma migration plan",
-    "db:migrate": "prisma db migrate",
-    "auth:generate": "bunx @better-auth/cli generate --config ./auth.cli.ts"
+    "db:emit": "dotenv -e ../../apps/web/.env -- prisma contract emit",
+    "db:init": "dotenv -e ../../apps/web/.env -- prisma db init",
+    "db:update": "dotenv -e ../../apps/web/.env -- prisma db update",
+    "db:plan": "dotenv -e ../../apps/web/.env -- prisma migration plan",
+    "db:migrate": "dotenv -e ../../apps/web/.env -- prisma db migrate",
+    "db:seed": "dotenv -e ../../apps/web/.env -- bun ./src/seed.ts",
+    "auth:generate": "dotenv -e ../../apps/web/.env -- bunx @better-auth/cli generate --config ./auth.cli.ts"
   },
   "dependencies": {
     "@better-auth/core": "^1.7.7",
+    "@prisma/orm-postgres": "8.0.0-rc.14",
     "better-auth": "^1.7.7",
     "better-auth-adapter-prisma8": "^0.6.0"
   },
   "devDependencies": {
-    "@better-auth/cli": "^1.4.21"
+    "@better-auth/cli": "^1.4.21",
+    "dotenv-cli": "^8.0.0"
   }
 }

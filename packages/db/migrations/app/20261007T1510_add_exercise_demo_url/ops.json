@@ -1,0 +1,44 @@
+[
+  {
+    "id": "column.public.plan_exercise.demoUrl",
+    "label": "Add column \"demoUrl\" to \"plan_exercise\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "demoUrl",
+        "table": "plan_exercise"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"demoUrl\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrl"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"demoUrl\"",
+        "sql": "ALTER TABLE \"public\".\"plan_exercise\" ADD COLUMN \"demoUrl\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"demoUrl\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "plan_exercise",
+          "demoUrl"
+        ]
+      }
+    ]
+  }
+]

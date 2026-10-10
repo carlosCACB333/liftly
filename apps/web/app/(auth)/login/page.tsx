@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: "Iniciar sesión",
   description:
-    "Accede a Liftly para seguir con tus rutinas y registrar cada entrenamiento.",
+    "Accede a Liftly para ver y editar tus planes de entrenamiento.",
 }
 
 export default async function LoginPage() {
@@ -31,7 +31,7 @@ export default async function LoginPage() {
         <CardHeader className="gap-2 text-center">
           <CardTitle className="text-xl">Inicia sesión</CardTitle>
           <CardDescription>
-            Entra para continuar con tus rutinas y ver tu progreso.
+            Entra para ver tus planes, editarlos o explorar los de la comunidad.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -42,7 +42,7 @@ export default async function LoginPage() {
       <p className="text-center text-sm text-muted-foreground">
         ¿Todavía no tienes cuenta?{" "}
         <Link
-          href="/registro"
+          href="/register"
           className="rounded-sm font-medium text-foreground underline underline-offset-4 hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
         >
           Crear cuenta

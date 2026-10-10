@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Restablece la contraseña de tu cuenta de Liftly.",
 }
 
-export default function OlvideMiContrasenaPage() {
+export default function ForgotPasswordPage() {
   return (
     <ComingSoon
       title="Recuperar contraseña"
