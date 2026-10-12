@@ -364,3 +364,10 @@ export function isWorkoutOwner(
 ) {
   return Boolean(currentUserId && detail.author?.id === currentUserId)
 }
+
+export async function getPublishedWorkoutSitemap() {
+  return Plan.where({ visibility: "public" })
+    .select("id", "updatedAt")
+    .orderBy((plan) => plan.updatedAt.desc())
+    .all()
+}
